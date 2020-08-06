@@ -224,3 +224,4 @@ RegisterFunction(chiLuaTest)
 RegisterNamespace(LuaNamespace)
 AddNamedConstantToNamespace(Name,1,LuaNamespace)
 
+RegisterFunction(chiExportFieldFunctionToBinary)
