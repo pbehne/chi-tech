@@ -56,3 +56,5 @@ CHI_DOC/LUA_DOCUMENTATION/lua_register.txt
 
 #Unit test outputs
 CHI_TECH/UnitTests/Output
+
+build/*

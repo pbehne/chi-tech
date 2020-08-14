@@ -21,7 +21,7 @@ extern ChiMPI& chi_mpi;
 \param argument1 Any Argument of any type.
 \ingroup LuaGeneralUtilities
  */
-int chiExportFieldFunctionToBinary(lua_State* L)
+int chiExportFieldFunctionToASCII(lua_State* L)
 {
   auto& physics_handler = ChiPhysics::GetInstance();
 
@@ -39,16 +39,13 @@ int chiExportFieldFunctionToBinary(lua_State* L)
   std::ofstream file;
   file.open(std::string(file_name)+"_"+
             std::to_string(chi_mpi.location_id)+
-            std::string(".bin"),
-	    std::ios::binary | std::ios::out);
+            std::string(".txt"));
 
   int M = uk_man->unknowns.size();
   int G = uk_man->unknowns.front()->num_components;
 
-  std::string M_line = std::to_string(M) + "\n";
-  std::string G_line = std::to_string(G) + "\n";
-  file.write((char*)&M_line, M_line.size());
-  file.write((char*)&G_line, G_line.size());
+  file << M << "\n";
+  file << G << "\n";
 
   auto grid = pwl->ref_grid;
 
@@ -62,10 +59,7 @@ int chiExportFieldFunctionToBinary(lua_State* L)
         {
           int ig = pwl->MapDFEMDOF(&cell,v,uk_man,0,g);
           int il = pwl->MapDFEMDOFLocal(&cell,v,uk_man,0,g);
-	  std::string line = std::to_string(ig) + " " +
-		  std::to_string((*ff->field_vector_local)[il]) + "\n";
-	  file.write((char*)&line, line.size());
-          //file << ig << " " << (*ff->field_vector_local)[il] << "\n";
+          file << ig << " " << (*ff->field_vector_local)[il] << "\n";
         }//for g
       }//for m
     }//for v
