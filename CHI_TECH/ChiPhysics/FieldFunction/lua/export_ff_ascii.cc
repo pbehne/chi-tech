@@ -44,8 +44,7 @@ int chiExportFieldFunctionToASCII(lua_State* L)
   int M = uk_man->unknowns.size();
   int G = uk_man->unknowns.front()->num_components;
 
-  file << M << "\n";
-  file << G << "\n";
+  file << G << " " << M << "\n";
 
   auto grid = pwl->ref_grid;
 
