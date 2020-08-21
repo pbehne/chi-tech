@@ -135,6 +135,7 @@ public:
   SweepChunk *SetSweepChunk(int group_set_num);
   void ClassicRichardson(int group_set_num);
   void GMRES(int group_set_num);
+  void GMRES_POD(int group_set_num, bool compute_b);
 
   //Vector assembly
   int  MapDOF(chi_mesh::Cell* cell, int dof, int mom, int g);

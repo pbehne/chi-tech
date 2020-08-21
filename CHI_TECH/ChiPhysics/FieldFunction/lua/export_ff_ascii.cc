@@ -27,7 +27,7 @@ int chiExportFieldFunctionToASCII(lua_State* L)
 
   int num_args = lua_gettop(L);
   if (num_args != 2)
-    LuaPostArgAmountError("chiExportFieldFunctionToBinary",2,num_args);
+    LuaPostArgAmountError("chiExportFieldFunctionToASCII",2,num_args);
 
   int handle =  lua_tonumber(L,1);
   const char* file_name = lua_tostring(L,2);
@@ -44,9 +44,11 @@ int chiExportFieldFunctionToASCII(lua_State* L)
   int M = uk_man->unknowns.size();
   int G = uk_man->unknowns.front()->num_components;
 
-  file << G << " " << M << "\n";
-
   auto grid = pwl->ref_grid;
+  int n_local_dofs = pwl->GetNumLocalDOFs(grid,uk_man);
+  int n_globl_dofs = pwl->GetNumGlobalDOFs(grid,uk_man);
+
+  file << G << " " << M << " " << n_local_dofs << " " << n_globl_dofs << "\n";
 
   for (auto& cell : grid->local_cells)
   {

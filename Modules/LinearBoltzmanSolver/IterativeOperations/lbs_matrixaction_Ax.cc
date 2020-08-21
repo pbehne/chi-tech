@@ -64,3 +64,83 @@ int NPTMatrixAction_Ax(Mat matrix, Vec krylov_vector, Vec Ax)
 
   return 0;
 }
+
+//###################################################################
+/**Computes the action of the transport matrix on a vector.*/
+int NPTMatrixAction_Ax_POD_b(Mat matrix, Vec input_vector, Vec Ax)
+{
+  KSPDataContext* context;
+  MatShellGetContext(matrix,&context);
+
+  LinearBoltzman::Solver* solver = context->solver;
+  SweepChunk* sweep_chunk = context->sweep_chunk;
+  LBSGroupset* groupset  = context->groupset;
+  MainSweepScheduler* sweepScheduler = context->sweepScheduler;
+
+  //============================================= Copy krylov vector into local
+  solver->DisAssembleVector(groupset,
+                            input_vector,
+                            solver->phi_old_local.data());
+
+  //============================================= Setting the source using
+  //                                             updated phi_old
+  solver->SetSource(context->group_set_num,
+                    false, // Apply material src???
+                    true); // Suppress MSphi ???
+
+  //============================================= Sweeping the new source
+  groupset->angle_agg->ResetDelayedPsi();
+
+  solver->phi_new_local.assign(solver->phi_new_local.size(),0.0);
+  sweepScheduler->Sweep(sweep_chunk);
+
+  solver->AssembleVector(groupset,
+                         context->x_temp,
+                         solver->phi_new_local.data());
+
+
+  //============================================= Computing action
+  VecWAXPY(Ax,-1.0,context->x_temp,input_vector);
+
+  return 0;
+}
+
+//###################################################################
+/**Computes the action of the transport matrix on a vector.*/
+int NPTMatrixAction_Ax_POD(Mat matrix, Vec input_vector, Vec Ax)
+{
+  KSPDataContext* context;
+  MatShellGetContext(matrix,&context);
+
+  LinearBoltzman::Solver* solver = context->solver;
+  SweepChunk* sweep_chunk = context->sweep_chunk;
+  LBSGroupset* groupset  = context->groupset;
+  MainSweepScheduler* sweepScheduler = context->sweepScheduler;
+
+  //============================================= Copy krylov vector into local
+  solver->DisAssembleVector(groupset,
+                            input_vector,
+                            solver->phi_old_local.data());
+
+  //============================================= Setting the source using
+  //                                             updated phi_old
+  solver->SetSource(context->group_set_num,
+                    false, // Apply material src? It is MSphi in this case
+                    true); // Dont iterate to include scattering
+
+  //============================================= Sweeping the new source
+  groupset->angle_agg->ResetDelayedPsi();
+
+  solver->phi_new_local.assign(solver->phi_new_local.size(),0.0);
+  sweepScheduler->Sweep(sweep_chunk);
+
+  solver->AssembleVector(groupset,
+                         context->x_temp,
+                         solver->phi_new_local.data());
+
+
+  //============================================= Computing action
+  VecWAXPY(Ax,-1.0,context->x_temp,input_vector);
+
+  return 0;
+}
