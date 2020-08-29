@@ -58,9 +58,14 @@ int chiExportFieldFunctionToASCII(lua_State* L)
       {
         for (int g=0; g<G; ++g)
         {
-          int ig = pwl->MapDFEMDOF(&cell,v,uk_man,0,g);
+          // int ig = pwl->MapDFEMDOF(&cell,v,uk_man,0,g);
           int il = pwl->MapDFEMDOFLocal(&cell,v,uk_man,0,g);
-          file << ig << " " << (*ff->field_vector_local)[il] << "\n";
+          // file << ig << " " << (*ff->field_vector_local)[il] << "\n";
+          file << cell.global_id << " "
+               << v              << " "
+               << m              << " "
+               << g              << " "
+               << (*ff->field_vector_local)[il] << "\n";
         }//for g
       }//for m
     }//for v
