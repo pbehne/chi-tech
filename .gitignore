@@ -58,3 +58,5 @@ CHI_DOC/LUA_DOCUMENTATION/lua_register.txt
 CHI_TECH/UnitTests/Output
 
 build/*
+#Scratch directory
+scratch/
