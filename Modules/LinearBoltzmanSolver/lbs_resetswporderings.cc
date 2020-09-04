@@ -52,6 +52,7 @@ void LinearBoltzman::Solver::ResetSweepOrderings(LBSGroupset *groupset)
   }
   angle_agg->angle_set_groups.clear();
   delete angle_agg;
+  groupset->angle_agg = new chi_mesh::sweep_management::AngleAggregation;
 
   MPI_Barrier(MPI_COMM_WORLD);
 
