@@ -30,7 +30,9 @@ void chi_physics::TransportCrossSections::
   sigma_captg.resize(in_G,0.0);
   chi_g.resize(in_G,0.0);
   nu_sigma_fg.resize(in_G,0.0);
+  ddt_coeff.resize(in_G,0.0);
 
+  transfer_matrix.clear();
   transfer_matrix.push_back(chi_math::SparseMatrix(in_G,in_G));
 }
 
@@ -51,6 +53,7 @@ void chi_physics::TransportCrossSections::
   chi_g.resize(in_G,0.0);
   nu_sigma_fg.resize(in_G,0.0);
 
+  transfer_matrix.clear();
   transfer_matrix.push_back(chi_math::SparseMatrix(in_G,in_G));
 
   auto& ref_matrix = transfer_matrix.back();
